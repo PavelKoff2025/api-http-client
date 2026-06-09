@@ -42,7 +42,7 @@ API/
 
 ```bash
 # Клонировать репозиторий
-git clone <url-репозитория>
+git clone https://github.com/PavelKoff2025/api-http-client.git
 cd API
 
 # Создать виртуальное окружение
