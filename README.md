@@ -3,31 +3,43 @@
 Консольное приложение на Python для тестовых HTTP-запросов к публичным API.  
 Проект выполнен в рамках курса по работе с REST API.
 
+**Репозиторий:** https://github.com/PavelKoff2025/api-http-client
+
 ## Возможности
 
-### Задание 1 (минимум)
+### Модуль стран и HTTP-клиент
 
 - GET-запросы к API вручную и через программу
 - Получение ответа в формате JSON
 - Извлечение ключевых полей из JSON (название, столица, население)
 - Цветной вывод информации о стране
-
-### Задание 2 (средний уровень)
-
 - CLI-меню на русском языке
-- HTTP-функции вынесены в отдельный модуль `http_client.py`
+- HTTP-функции в модуле `http_client.py`
 - Пункт меню «Случайная собака» (Dog CEO API)
-- Запрос информации о стране (REST Countries API)
+
+### Модуль валют (open.er-api.com)
+
+- Запрос курсов валют и кэширование в `currency_rate.json`
+- Мини-CLI: базовая валюта → курсы RUB, EUR, GBP
+- Конвертер суммы с точностью 4 знака
+- Валидация кодов валют по `rates.keys()`
+- Разделение на модули: `api_client.py`, `storage.py`, `cli.py`
 
 ## Структура проекта
 
 ```
 API/
-├── main.py           # Главное CLI-меню
-├── http_client.py    # HTTP-обёртка (get, проверка статуса)
-├── country_info.py   # Красивый вывод данных о стране
-├── homework.py       # Демонстрация задания 1
-├── requirements.txt  # Зависимости
+├── main.py              # CLI: страны, собаки, GET-запросы
+├── http_client.py       # HTTP-обёртка (задание по странам)
+├── country_info.py      # Цветной вывод данных о стране
+├── homework.py          # Демонстрация задания 1 (страны)
+├── api_client.py        # HTTP-запросы к API валют
+├── storage.py           # Кэш, I/O, конвертация, валидация
+├── cli.py               # CLI конвертера валют
+├── currency.py          # Точка входа конвертера валют
+├── test_acceptance.py   # Проверка критериев приёмки
+├── homework_currency.md # Документация ДЗ по валютам (задание 1)
+├── requirements.txt
 └── README.md
 ```
 
@@ -37,71 +49,55 @@ API/
 |-----|-----|------------|
 | REST Countries | `https://restcountries.com/v3.1/name/{country}` | Информация о странах |
 | Dog CEO | `https://dog.ceo/api/breeds/image/random` | Случайное фото собаки |
+| Exchange Rate API | `https://open.er-api.com/v6/latest/{base}` | Курсы валют |
 
 ## Установка
 
 ```bash
-# Клонировать репозиторий
 git clone https://github.com/PavelKoff2025/api-http-client.git
-cd API
+cd api-http-client
 
-# Создать виртуальное окружение
 python3 -m venv venv
 source venv/bin/activate        # macOS / Linux
 # venv\Scripts\activate         # Windows
 
-# Установить зависимости
 pip install -r requirements.txt
 ```
 
 ## Запуск
 
-### Главное меню
+### HTTP-клиент (страны, собаки)
 
 ```bash
 python main.py
 ```
 
-```
-1 — GET по URL
-2 — Страна
-3 — Случайная собака
-0 — Выход
+### Конвертер валют
+
+```bash
+python cli.py
+# или
+python currency.py
 ```
 
-### Справочник стран (цветной вывод)
+### Проверка критериев приёмки
+
+```bash
+python test_acceptance.py
+```
+
+### Справочник стран
 
 ```bash
 python country_info.py
 ```
 
-### Демонстрация задания 1
+## Критерии приёмки (валюты)
 
-```bash
-python homework.py
-```
-
-## Примеры запросов
-
-### Вручную (curl)
-
-```bash
-curl "https://restcountries.com/v3.1/name/russia"
-curl "https://dog.ceo/api/breeds/image/random"
-```
-
-### Извлечение полей из JSON (Python)
-
-```python
-from http_client import get
-
-response = get("https://restcountries.com/v3.1/name/russia")
-country = response.json()[0]
-
-print(country["name"]["common"])   # Russia
-print(country["capital"][0])       # Moscow
-print(country["population"])       # 146028325
-```
+- Запуск в чистом venv с `requests` и `colorama`
+- Корректное создание/чтение `currency_rate.json`
+- Конвертация USD→RUB и EUR→GBP одинакова для кэша и свежего API-ответа
+- Ошибки (невалидная валюта, сеть) выводятся пользователю без stack trace
 
 ## Зависимости
 
