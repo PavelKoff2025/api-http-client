@@ -25,6 +25,14 @@
 - Валидация кодов валют по `rates.keys()`
 - Разделение на модули: `api_client.py`, `storage.py`, `cli.py`
 
+### Модуль погоды (OpenWeatherMap)
+
+- Geocoding API и Current Weather API
+- CLI: запрос по городу или координатам
+- Кэширование последнего ответа в `weather_cache.json` (до 3 часов)
+- Повторы при 429 и сетевых ошибках (1s, 2s, 4s)
+- Ключ API хранится в `.env`
+
 ## Структура проекта
 
 ```
@@ -39,6 +47,7 @@ API/
 ├── currency.py          # Точка входа конвертера валют
 ├── test_acceptance.py   # Проверка критериев приёмки
 ├── homework_currency.md # Документация ДЗ по валютам (задание 1)
+├── weather_app.py       # CLI погоды (OpenWeatherMap)
 ├── requirements.txt
 └── README.md
 ```
@@ -50,6 +59,7 @@ API/
 | REST Countries | `https://restcountries.com/v3.1/name/{country}` | Информация о странах |
 | Dog CEO | `https://dog.ceo/api/breeds/image/random` | Случайное фото собаки |
 | Exchange Rate API | `https://open.er-api.com/v6/latest/{base}` | Курсы валют |
+| OpenWeatherMap | `https://api.openweathermap.org` | Геокодинг и текущая погода |
 
 ## Установка
 
@@ -62,6 +72,12 @@ source venv/bin/activate        # macOS / Linux
 # venv\Scripts\activate         # Windows
 
 pip install -r requirements.txt
+```
+
+Создайте файл `.env` с ключом OpenWeather:
+
+```bash
+API_KEY=ваш_ключ
 ```
 
 ## Запуск
@@ -92,6 +108,12 @@ python test_acceptance.py
 python country_info.py
 ```
 
+### Погода
+
+```bash
+python weather_app.py
+```
+
 ## Критерии приёмки (валюты)
 
 - Запуск в чистом venv с `requests` и `colorama`
@@ -103,6 +125,7 @@ python country_info.py
 
 - [requests](https://pypi.org/project/requests/) — HTTP-запросы
 - [colorama](https://pypi.org/project/colorama/) — цветной вывод в терминале
+- [python-dotenv](https://pypi.org/project/python-dotenv/) — загрузка переменных из `.env`
 
 ## Автор
 

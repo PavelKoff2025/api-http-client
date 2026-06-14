@@ -14,4 +14,5 @@ env/
 dist/
 build/
 currency_rate.json
+weather_cache.json
 _acceptance_*.json
